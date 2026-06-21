@@ -1,4 +1,4 @@
-# LOGIN AND PASSWORD SYSTEM WITH AUTHENTICATION | 🇺🇸 English
+# 🔒 LOGIN AND PASSWORD SYSTEM WITH AUTHENTICATION | 🇺🇸 English
 ### 📝 Description
 - This is a backend authentication system developed in Python, focused on user management, credential validation, and data persistence. The project simulates a real-world application workflow, including protection against brute-force attacks (attempt limit) and external file handling.
 
