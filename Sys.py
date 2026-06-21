@@ -1,107 +1,110 @@
-import bancodedadosefuncoes as fn
+import database_and_functions as fn
 import json
 import sys
 
 try:
-    with open("usuarios.json", "r") as arquivo:
-        fn.banco_usuarios = json.load(arquivo)
+    with open("users.json", "r") as file:
+        fn.user_database = json.load(file)
 except FileNotFoundError:
     pass
 
-
 while True:
 
-    if fn.tentativas == 3:
-        print("="*10)
-        print("Você será desconectado. TYPE: Suspeita de SPAM.")
-        print("="*10)
+    if fn.attempts == 3:
+        print("=" * 10)
+        print("You will be disconnected. TYPE: Suspected SPAM.")
+        print("=" * 10)
         break
 
-    print("\n -- SISTEMA DE LOGIN/CADASTRO --")
+    print("\n -- LOGIN/REGISTRATION SYSTEM --")
     try:
-        opcao = int(input("\n1 - Login \n2 - Cadastrar Usuário \n3 - Sair \n4 - Conferir hora e data \n5 - Conferir banco de dados (liberado para teste) \n -- ESCOLHA: "))
+        option = int(input("\n1 - Login \n2 - Register User \n3 - Exit \n4 - Check date and time \n5 - View database (enabled for testing) \n -- CHOOSE: "))
 
-        if opcao == 1:
-            nomelog = input("Digite seu usuário cadastrado: ").strip()
-            
-            encontrado = False
+        if option == 1:
+            login_user = input("Enter your registered username: ").strip()
 
-            for c in fn.banco_usuarios:
-                    if nomelog == c['usuario']:
-                        encontrado = True
-                        senhalog = input("Digite sua senha: ").strip()
-                        if senhalog == c['senha']:
-                            print("Acesso liberado!")
-                        else:
-                            print("Senha incorreta!")
-                            fn.tentativas += 1
-                            print(f"{fn.tentativas}/3 tentativas")
-                            break
+            found = False
 
-            if not encontrado:
-                    print("="*10)
-                    print("Usuário não encontrado!")
+            for c in fn.user_database:
+                if login_user == c['username']:
+                    found = True
+                    login_password = input("Enter your password: ").strip()
+                    if login_password == c['password']:
+                        print("Access granted!")
+                    else:
+                        print("Incorrect password!")
+                        fn.attempts += 1
+                        print(f"{fn.attempts}/3 attempts")
+                        break
 
-        elif opcao == 2:
+            if not found:
+                print("=" * 10)
+                print("User not found!")
+
+        elif option == 2:
             while True:
-                    
-                criaruser = input("Crie um novo usuário: ").strip()
-                usuario_existe = False
 
-                for i in fn.banco_usuarios:
-                    if criaruser == i['usuario']:
-                            usuario_existe = True
-                            break
+                create_user = input("Create a new username: ").strip()
+                user_exists = False
 
-                if usuario_existe:
-                    print("Usuário já cadastrado!")
+                for i in fn.user_database:
+                    if create_user == i['username']:
+                        user_exists = True
+                        break
+
+                if user_exists:
+                    print("User already registered!")
                 else:
-                    criarsenha = input("Crie uma nova senha: ").strip()
-                    novo_usuario = {"usuario": criaruser, "senha": criarsenha}
-                    fn.banco_usuarios.append(novo_usuario)
+                    create_password = input("Create a new password: ").strip()
+                    new_user = {
+                        "username": create_user,
+                        "password": create_password
+                    }
+                    fn.user_database.append(new_user)
 
-                    with open("usuarios.json", "w") as arquivo:
-                        json.dump(fn.banco_usuarios, arquivo, indent=4)
+                    with open("users.json", "w") as file:
+                        json.dump(fn.user_database, file, indent=4)
 
-                    print("Usuário criado com sucesso!")
-                    print("-"*10)
-                    input("Digite ENTER PARA CONTINUAR: ")
-                    fn.limpar_tela()
+                    print("User created successfully!")
+                    print("-" * 10)
+                    input("Press ENTER TO CONTINUE: ")
+                    fn.clear_screen()
                     break
 
-        elif opcao == 3:
-            fn.sair()
+        elif option == 3:
+            fn.exit_program()
             break
-        
-        elif opcao == 4:
-                if sys.stdin.isatty():
-                    sys.stdin.flush()
 
-                print(f"ATT: {fn.mostrardataehora()} - Horário de Brasília")
+        elif option == 4:
+            if sys.stdin.isatty():
+                sys.stdin.flush()
 
-                input("\nPressione ENTER para limpar a tela e voltar ao menu: ")
-                fn.limpar_tela()
+            print(f"Current: {fn.show_date_and_time()} - Brasília Time")
 
-        elif opcao == 5:
+            input("\nPress ENTER to clear the screen and return to the menu: ")
+            fn.clear_screen()
+
+        elif option == 5:
 
             if sys.stdin.isatty():
                 sys.stdin.flush()
 
-            print(f"\n == BANCO DE DADOS | Relatório: {fn.mostrardataehora()} - Brasília, Brasil. ==")
+            print(f"\n == DATABASE | Report: {fn.show_date_and_time()} - Brasília, Brazil. ==")
 
-            for i in fn.banco_usuarios:
-                print(f"User: {i['usuario']:<15} | Senha: {i['senha']}")
-            input("\nPressione ENTER para limpar a tela e voltar ao menu: ")
-            fn.limpar_tela()
+            for i in fn.user_database:
+                print(f"User: {i['username']:<15} | Password: {i['password']}")
+
+            input("\nPress ENTER to clear the screen and return to the menu: ")
+            fn.clear_screen()
 
     except Exception as e:
-        print(f"\n[SISTEMA] Ocorreu um erro inesperado: {e}")
-        input("Pressione ENTER para tentar novamente...")
+        print(f"\n[SYSTEM] An unexpected error occurred: {e}")
+        input("Press ENTER to try again...")
 
     except ValueError:
-        print("="*10)
-        print("ERRO!")
-        print("="*10)
+        print("=" * 10)
+        print("ERROR!")
+        print("=" * 10)
 
     except IndexError:
-        print("Digite uma opção válida!")
+        print("Enter a valid option!")
